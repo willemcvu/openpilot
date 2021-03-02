@@ -367,8 +367,10 @@ void panda_state_thread(bool spoofing_started) {
     ps.setUsbPowerMode(cereal::PandaState::UsbPowerMode(pandaState.usb_power_mode));
     ps.setSafetyModel(cereal::CarParams::SafetyModel(pandaState.safety_model));
     ps.setFanSpeedRpm(fan_speed_rpm);
-    ps.setFaultStatus(cereal::PandaState::FaultStatus(pandaState.fault_status));
+    //ps.setFaultStatus(cereal::PandaState::FaultStatus(pandaState.fault_status));
     ps.setPowerSaveEnabled((bool)(pandaState.power_save_enabled));
+
+    pandaState.faults &= 0xfffffffe; // mask out relay fault bit
 
     // Convert faults bitset to capnp list
     std::bitset<sizeof(pandaState.faults) * 8> fault_bits(pandaState.faults);
