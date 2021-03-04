@@ -1,5 +1,7 @@
 Version 0.8.3 (2021-XX-XX)
 ========================
+ * NEOS update: update packages and support for new UI
+ * Remove default SSH key after setup
 
 Version 0.8.2 (2021-02-26)
 ========================
