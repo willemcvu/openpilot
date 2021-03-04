@@ -42,7 +42,32 @@ static inline auto get_yuv_buf(std::vector<uint8_t> &buf, const int width, int h
 }
 
 DMonitoringResult dmonitoring_eval_frame(DMonitoringModelState* s, void* stream_buf, int width, int height) {
-  uint8_t *raw_buf = (uint8_t*) stream_buf;
+  static int fidx = 0;
+
+  char fn[32];
+  snprintf(fn, sizeof(char) * 32, "/data/test_yuv/yuv_%d", fidx);
+
+  FILE * pFile;
+  long lSize;
+  uint8_t * yuv_buffer;
+  size_t result;
+
+  pFile = fopen (fn, "rb");
+  if (pFile==NULL) {fputs ("File error",stderr); exit (1);}
+
+  lSize = 918*816;
+
+  yuv_buffer = (uint8_t*) malloc (sizeof(uint8_t)*lSize);
+  if (yuv_buffer == NULL) {fputs ("Memory error",stderr); exit (2);}
+
+  result = fread (yuv_buffer, 1, lSize, pFile);
+  if (result != lSize) {fputs ("Reading error",stderr); exit (3);}
+  fclose (pFile);
+  printf("loaded yuv %d\n", fidx);
+  fidx += 1;
+  if (fidx >= 600) fidx = 0;
+
+  uint8_t *raw_buf = (uint8_t*) yuv_buffer;
   uint8_t *raw_y_buf = raw_buf;
   uint8_t *raw_u_buf = raw_y_buf + (width * height);
   uint8_t *raw_v_buf = raw_u_buf + ((width/2) * (height/2));
@@ -146,6 +171,7 @@ DMonitoringResult dmonitoring_eval_frame(DMonitoringModelState* s, void* stream_
   s->m->execute(net_input_buf, yuv_buf_len);
   double t2 = millis_since_boot();
 
+  free (yuv_buffer);
   DMonitoringResult ret = {0};
   for (int i = 0; i < 3; ++i) {
     ret.face_orientation[i] = s->output[i];
