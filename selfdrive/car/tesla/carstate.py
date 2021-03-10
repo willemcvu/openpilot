@@ -29,7 +29,7 @@ class CarState(CarStateBase):
 
     # Brake pedal
     ret.brake = 0 # TODO: find if this exists
-    ret.brakePressed = bool(cp.vl["DI_torque2"]["DI_brakePedal"])
+    ret.brakePressed = bool(cp.vl["BrakeMessage"]["driverBrakeStatus"] != 1)
 
     # Steering wheel
     ret.steeringAngleDeg = -cp.vl["EPAS_sysStatus"]["EPAS_internalSAS"]
@@ -111,6 +111,7 @@ class CarState(CarStateBase):
       ("BC_indicatorLStatus", "GTW_carState", 1),
       ("BC_indicatorRStatus", "GTW_carState", 1),
       ("SDM_bcklDrivStatus", "SDM1", 0),
+      ("driverBrakeStatus", "BrakeMessage", 0),
     ]
 
     checks = [
@@ -124,6 +125,7 @@ class CarState(CarStateBase):
       ("STW_ACTN_RQ", 10),
       ("GTW_carState", 10),
       ("SDM1", 10),
+      ("BrakeMessage", 50),
     ]
 
     return CANParser(DBC[CP.carFingerprint]['chassis'], signals, checks, CANBUS.chassis)

@@ -23,17 +23,12 @@ class CarInterface(CarInterfaceBase):
 
     # Unused
     ret.steerActuatorDelay = 0.1
-    ret.lateralTuning.pid.kf = 0.00006
-    ret.lateralTuning.pid.kiBP, ret.lateralTuning.pid.kpBP = [[0.0], [0.0]]
-    ret.lateralTuning.pid.kpV, ret.lateralTuning.pid.kiV = [[0.01], [0.005]]
-    ret.steerMaxBP = [0.]  # m/s
-    ret.steerMaxV = [1.]
 
     if candidate == CAR.AP2_MODELS:
       ret.mass = 2100. + STD_CARGO_KG
       ret.wheelbase = 2.959
       ret.centerToFront = ret.wheelbase * 0.5
-      ret.steerRatio = 15.0
+      ret.steerRatio = 13.5
     else:
       raise ValueError(f"Unsupported car: {candidate}")
 
