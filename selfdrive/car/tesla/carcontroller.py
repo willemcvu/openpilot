@@ -34,7 +34,7 @@ class CarController():
       cruise_cancel = True
 
     # TODO: check action request receive time and send on change instead of 10 Hz
-    if ((frame % 10) == 0):
+    if ((frame % 10) == 0 and cruise_cancel):
       can_sends.append(self.tesla_can.create_action_request(CS.msg_stw_actn_req, cruise_cancel))
 
     # TODO: HUD control

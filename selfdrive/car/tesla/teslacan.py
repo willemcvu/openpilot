@@ -37,6 +37,6 @@ class TeslaCAN:
     if cancel:
       values["SpdCtrlLvr_Stat"] = 1  # self.can_define.dv["STW_ACTN_RQ"]["SpdCtrlLvr_Stat"].get("FWD")
 
-    data = self.packer.make_can_msg("STW_ACTN_RQ", CANBUS.autopilot, values)[2]
+    data = self.packer.make_can_msg("STW_ACTN_RQ", CANBUS.chassis, values)[2]
     values["CRC_STW_ACTN_RQ"] = self.crc(data[:7])
-    return self.packer.make_can_msg("STW_ACTN_RQ", CANBUS.autopilot, values)
+    return self.packer.make_can_msg("STW_ACTN_RQ", CANBUS.chassis, values)
