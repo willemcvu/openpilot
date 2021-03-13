@@ -12,8 +12,10 @@ class CarState(CarStateBase):
     self.button_states = {button.event_type: False for button in BUTTONS}
     self.can_define = CANDefine(DBC[CP.carFingerprint]['chassis'])
 
-    # Messages needed by carcontroller
+    # Needed by carcontroller
     self.msg_stw_actn_req = None
+    self.hands_on_level = 0
+    self.steer_warning = None
 
   def update(self, cp, cp_cam):
     ret = car.CarState.new_message()
@@ -35,8 +37,11 @@ class CarState(CarStateBase):
     ret.steeringAngleDeg = -cp.vl["EPAS_sysStatus"]["EPAS_internalSAS"]
     ret.steeringRateDeg = -cp.vl["STW_ANGLHP_STAT"]["StW_AnglHP_Spd"] # This is from a different angle sensor, and at different rate
     ret.steeringTorque = -cp.vl["EPAS_sysStatus"]["EPAS_torsionBarTorque"]
-    ret.steeringPressed = (cp.vl["EPAS_sysStatus"]["EPAS_handsOnLevel"] > 0)
+    self.hands_on_level = cp.vl["EPAS_sysStatus"]["EPAS_handsOnLevel"]
+    ret.steeringPressed = (self.hands_on_level > 0)
     ret.steerError = bool(cp.vl["EPAS_sysStatus"]["EPAS_steeringFault"])
+    self.steer_warning = self.can_define.dv["EPAS_sysStatus"]["EPAS_eacErrorCode"].get(int(cp.vl["EPAS_sysStatus"]["EPAS_eacErrorCode"]), None)
+    ret.steerWarning = (self.steer_warning in ["EAC_ERROR_HANDS_ON", "EAC_ERROR_MAX_SPEED", "EAC_ERROR_MIN_SPEED", "EAC_ERROR_TMP_FAULT", "SNA"])  # TODO: not sure if this list is complete
 
     # Cruise state
     cruise_state = self.can_define.dv["DI_state"]["DI_cruiseState"].get(int(cp.vl["DI_state"]["DI_cruiseState"]), None)
@@ -96,6 +101,7 @@ class CarState(CarStateBase):
       ("EPAS_torsionBarTorque", "EPAS_sysStatus", 0),
       ("EPAS_steeringFault", "EPAS_sysStatus", 0),
       ("EPAS_internalSAS", "EPAS_sysStatus", 0),
+      ("EPAS_eacErrorCode", "EPAS_sysStatus", 0),
       ("DI_cruiseState", "DI_state", 0),
       ("DI_digitalSpeed", "DI_state", 0),
       ("DI_speedUnits", "DI_state", 0),

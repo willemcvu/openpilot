@@ -13,7 +13,11 @@ class CarController():
   def update(self, enabled, CS, frame, actuators, cruise_cancel):
     can_sends = []
 
-    if enabled:
+    # Temp disable steering on a hands_on_fault
+    hands_on_fault = (CS.steer_warning == "EAC_ERROR_HANDS_ON" and CS.hands_on_level >= 3)
+    lkas_enabled = enabled and not hands_on_fault
+
+    if lkas_enabled:
       # Angular rate limit based on speed
       apply_angle = actuators.steeringAngleDeg
       steer_up = (self.last_angle * apply_angle > 0. and abs(apply_angle) > abs(self.last_angle))
@@ -26,8 +30,7 @@ class CarController():
       apply_angle = CS.out.steeringAngleDeg
 
     self.last_angle = apply_angle
-
-    can_sends.append(self.tesla_can.create_steering_control(apply_angle, enabled, frame))
+    can_sends.append(self.tesla_can.create_steering_control(apply_angle, lkas_enabled, frame))
 
     # Cancel when openpilot is not enabled anymore
     if not enabled and bool(CS.out.cruiseState.enabled):
