@@ -34,14 +34,17 @@ class CarState(CarStateBase):
     ret.brakePressed = bool(cp.vl["BrakeMessage"]["driverBrakeStatus"] != 1)
 
     # Steering wheel
+    self.hands_on_level = cp.vl["EPAS_sysStatus"]["EPAS_handsOnLevel"]
+    self.steer_warning = self.can_define.dv["EPAS_sysStatus"]["EPAS_eacErrorCode"].get(int(cp.vl["EPAS_sysStatus"]["EPAS_eacErrorCode"]), None)
+    steer_status = self.can_define.dv["EPAS_sysStatus"]["EPAS_eacStatus"].get(int(cp.vl["EPAS_sysStatus"]["EPAS_eacStatus"]), None)
+
     ret.steeringAngleDeg = -cp.vl["EPAS_sysStatus"]["EPAS_internalSAS"]
     ret.steeringRateDeg = -cp.vl["STW_ANGLHP_STAT"]["StW_AnglHP_Spd"] # This is from a different angle sensor, and at different rate
     ret.steeringTorque = -cp.vl["EPAS_sysStatus"]["EPAS_torsionBarTorque"]
-    self.hands_on_level = cp.vl["EPAS_sysStatus"]["EPAS_handsOnLevel"]
     ret.steeringPressed = (self.hands_on_level > 0)
-    ret.steerError = bool(cp.vl["EPAS_sysStatus"]["EPAS_steeringFault"])
-    self.steer_warning = self.can_define.dv["EPAS_sysStatus"]["EPAS_eacErrorCode"].get(int(cp.vl["EPAS_sysStatus"]["EPAS_eacErrorCode"]), None)
-    ret.steerWarning = (self.steer_warning in ["EAC_ERROR_HANDS_ON", "EAC_ERROR_MAX_SPEED", "EAC_ERROR_MIN_SPEED", "EAC_ERROR_TMP_FAULT", "SNA"])  # TODO: not sure if this list is complete
+    self.can_define.dv["DI_torque2"]["DI_gear"].get(int(cp.vl["DI_torque2"]["DI_gear"]), "DI_GEAR_INVALID")
+    ret.steerError = steer_status in ["EAC_FAULT", "EAC_INHIBITED"]
+    ret.steerWarning = self.steer_warning in ["EAC_ERROR_HANDS_ON", "EAC_ERROR_MAX_SPEED", "EAC_ERROR_MIN_SPEED", "EAC_ERROR_TMP_FAULT", "SNA"]  # TODO: not sure if this list is complete
 
     # Cruise state
     cruise_state = self.can_define.dv["DI_state"]["DI_cruiseState"].get(int(cp.vl["DI_state"]["DI_cruiseState"]), None)
