@@ -21,8 +21,8 @@ class CarInterface(CarInterfaceBase):
     ret.openpilotLongitudinalControl = False
     ret.communityFeature = True
 
-    # Unused
     ret.steerActuatorDelay = 0.1
+    ret.steerRateCost = 0.5
 
     if candidate == CAR.AP2_MODELS:
       ret.mass = 2100. + STD_CARGO_KG
