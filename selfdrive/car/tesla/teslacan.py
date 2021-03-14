@@ -18,12 +18,10 @@ class TeslaCAN:
     return ret & 0xFF
 
   def create_steering_control(self, angle, enabled, frame):
-    # can_definitions = self.can_define.dv["DAS_steeringControl"]
-
     values = {
       "DAS_steeringAngleRequest": -angle,
-      "DAS_steeringHapticRequest": 0,  # can_definitions["DAS_steeringHapticRequest"].get("IDLE"),
-      "DAS_steeringControlType": 1 if enabled else 0,  # can_definitions["DAS_steeringControlType"].get("ANGLE_CONTROL" if enabled else "NONE"),
+      "DAS_steeringHapticRequest": 0,
+      "DAS_steeringControlType": 1 if enabled else 0,
       "DAS_steeringControlCounter": (frame % 16),
     }
 
@@ -35,7 +33,7 @@ class TeslaCAN:
     values = copy.copy(msg_stw_actn_req)
 
     if cancel:
-      values["SpdCtrlLvr_Stat"] = 1  # self.can_define.dv["STW_ACTN_RQ"]["SpdCtrlLvr_Stat"].get("FWD")
+      values["SpdCtrlLvr_Stat"] = 1
 
     data = self.packer.make_can_msg("STW_ACTN_RQ", CANBUS.chassis, values)[2]
     values["CRC_STW_ACTN_RQ"] = self.crc(data[:7])

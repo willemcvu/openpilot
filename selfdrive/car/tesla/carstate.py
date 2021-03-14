@@ -30,7 +30,7 @@ class CarState(CarStateBase):
     ret.gasPressed = (ret.gas > 0)
 
     # Brake pedal
-    ret.brake = 0 # TODO: find if this exists
+    ret.brake = 0
     ret.brakePressed = bool(cp.vl["BrakeMessage"]["driverBrakeStatus"] != 1)
 
     # Steering wheel
@@ -76,12 +76,10 @@ class CarState(CarStateBase):
     ret.doorOpen = any([(self.can_define.dv["GTW_carState"][door].get(int(cp.vl["GTW_carState"][door]), "OPEN") == "OPEN") for door in DOORS])
 
     # Blinkers
-    # TODO: convert constants to DBC values
     ret.leftBlinker = (cp.vl["GTW_carState"]["BC_indicatorLStatus"] == 1)
     ret.rightBlinker = (cp.vl["GTW_carState"]["BC_indicatorRStatus"] == 1)
 
     # Seatbelt
-    # TODO: convert constants to DBC values
     ret.seatbeltUnlatched = (cp.vl["SDM1"]["SDM_bcklDrivStatus"] != 1)
 
     # TODO: blindspot
@@ -143,10 +141,8 @@ class CarState(CarStateBase):
   def get_cam_can_parser(CP):
     signals = [
       # sig_name, sig_address, default
-
     ]
     checks = [
       # sig_address, frequency
-
     ]
     return CANParser(DBC[CP.carFingerprint]['chassis'], signals, checks, CANBUS.autopilot)
