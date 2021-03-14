@@ -35,7 +35,7 @@ class CarController():
       apply_angle = actuators.steeringAngleDeg
 
       # Driver torque blending
-      apply_angle += self.compute_torque_blending(CS.out.steeringTorque)
+      #apply_angle += self.compute_torque_blending(CS.out.steeringTorque)
 
       # Angular rate limit based on speed
       steer_up = (self.last_angle * apply_angle > 0. and abs(apply_angle) > abs(self.last_angle))
