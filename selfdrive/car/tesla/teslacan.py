@@ -29,12 +29,13 @@ class TeslaCAN:
     values["DAS_steeringControlChecksum"] = self.checksum(0x488, data[:3])
     return self.packer.make_can_msg("DAS_steeringControl", CANBUS.chassis, values)
 
-  def create_action_request(self, msg_stw_actn_req, cancel):
+  def create_action_request(self, msg_stw_actn_req, cancel, bus, counter):
     values = copy.copy(msg_stw_actn_req)
 
     if cancel:
       values["SpdCtrlLvr_Stat"] = 1
+      values["MC_STW_ACTN_RQ"] = counter
 
-    data = self.packer.make_can_msg("STW_ACTN_RQ", CANBUS.chassis, values)[2]
+    data = self.packer.make_can_msg("STW_ACTN_RQ", bus, values)[2]
     values["CRC_STW_ACTN_RQ"] = self.crc(data[:7])
-    return self.packer.make_can_msg("STW_ACTN_RQ", CANBUS.chassis, values)
+    return self.packer.make_can_msg("STW_ACTN_RQ", bus, values)

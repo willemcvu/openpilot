@@ -2,7 +2,7 @@ from common.realtime import DT_CTRL
 from common.numpy_fast import clip, interp
 from selfdrive.car.tesla.teslacan import TeslaCAN
 from opendbc.can.packer import CANPacker
-from selfdrive.car.tesla.values import CarControllerParams
+from selfdrive.car.tesla.values import CANBUS, CarControllerParams
 
 class CarController():
   def __init__(self, dbc_name, CP, VM):
@@ -53,7 +53,10 @@ class CarController():
       cruise_cancel = True
 
     if ((frame % 10) == 0 and cruise_cancel):
-      can_sends.append(self.tesla_can.create_action_request(CS.msg_stw_actn_req, cruise_cancel))
+      # Spam every possible counter value, otherwise it's not accepted
+      for counter in range(16):
+        can_sends.append(self.tesla_can.create_action_request(CS.msg_stw_actn_req, cruise_cancel, CANBUS.chassis, counter))
+        can_sends.append(self.tesla_can.create_action_request(CS.msg_stw_actn_req, cruise_cancel, CANBUS.autopilot, counter))
 
     # TODO: HUD control
 
