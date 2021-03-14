@@ -42,7 +42,6 @@ class CarState(CarStateBase):
     ret.steeringRateDeg = -cp.vl["STW_ANGLHP_STAT"]["StW_AnglHP_Spd"] # This is from a different angle sensor, and at different rate
     ret.steeringTorque = -cp.vl["EPAS_sysStatus"]["EPAS_torsionBarTorque"]
     ret.steeringPressed = (self.hands_on_level > 0)
-    self.can_define.dv["DI_torque2"]["DI_gear"].get(int(cp.vl["DI_torque2"]["DI_gear"]), "DI_GEAR_INVALID")
     ret.steerError = steer_status in ["EAC_FAULT", "EAC_INHIBITED"]
     ret.steerWarning = self.steer_warning in ["EAC_ERROR_HANDS_ON", "EAC_ERROR_MAX_SPEED", "EAC_ERROR_MIN_SPEED", "EAC_ERROR_TMP_FAULT", "SNA"]  # TODO: not sure if this list is complete
 
