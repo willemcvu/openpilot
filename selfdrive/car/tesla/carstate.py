@@ -169,7 +169,7 @@ class CarState(CarStateBase):
       ("GTW_carState", 10),
       ("SDM1", 10),
       ("BrakeMessage", 50),
-      ("AutopilotStatus", 2),
+      # ("AutopilotStatus", 2),
     ]
 
     return CANParser(DBC[CP.carFingerprint]['chassis'], signals, checks, CANBUS.chassis)

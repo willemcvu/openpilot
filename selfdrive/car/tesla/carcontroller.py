@@ -16,7 +16,7 @@ class CarController():
     # Temp disable steering on a hands_on_fault, and allow for user override
     # TODO: better user blending
     hands_on_fault = (CS.steer_warning == "EAC_ERROR_HANDS_ON" and CS.hands_on_level >= 3)
-    lkas_enabled = enabled and (not hands_on_fault) and (CS.hands_on_level == 0)
+    lkas_enabled = enabled and (not hands_on_fault)
 
     if lkas_enabled:
       apply_angle = actuators.steeringAngleDeg
@@ -26,6 +26,9 @@ class CarController():
       rate_limit = CarControllerParams.RATE_LIMIT_UP if steer_up else CarControllerParams.RATE_LIMIT_DOWN
       max_angle_diff = interp(CS.out.vEgo, rate_limit.speed_points, rate_limit.max_angle_diff_points)
       apply_angle = clip(apply_angle, (self.last_angle - max_angle_diff), (self.last_angle + max_angle_diff))
+
+      # To not fault the EPS
+      apply_angle = clip(apply_angle, (CS.out.steeringAngleDeg - 20), (CS.out.steeringAngleDeg + 20))
     else:
       apply_angle = CS.out.steeringAngleDeg
 
