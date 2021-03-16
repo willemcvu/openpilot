@@ -43,7 +43,7 @@ class CarState(CarStateBase):
     ret.steeringTorque = -cp.vl["EPAS_sysStatus"]["EPAS_torsionBarTorque"]
     ret.steeringPressed = (self.hands_on_level > 0)
     ret.steerError = steer_status in ["EAC_FAULT", "EAC_INHIBITED"]
-    ret.steerWarning = self.steer_warning in ["EAC_ERROR_HANDS_ON", "EAC_ERROR_MAX_SPEED", "EAC_ERROR_MIN_SPEED", "EAC_ERROR_TMP_FAULT", "SNA"]  # TODO: not sure if this list is complete
+    ret.steerWarning = self.steer_warning in ["EAC_ERROR_MAX_SPEED", "EAC_ERROR_MIN_SPEED", "EAC_ERROR_TMP_FAULT", "SNA"]  # TODO: not sure if this list is complete
 
     # Cruise state
     autopilot_status = self.can_define.dv["AutopilotStatus"]["autopilotStatus"].get(int(cp.vl["AutopilotStatus"]["autopilotStatus"]), None)
