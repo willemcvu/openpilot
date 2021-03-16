@@ -105,7 +105,7 @@ class CarState(CarStateBase):
       ("EPAS_handsOnLevel", "EPAS_sysStatus", 0),
       ("EPAS_torsionBarTorque", "EPAS_sysStatus", 0),
       ("EPAS_internalSAS", "EPAS_sysStatus", 0),
-      ("EPAS_eacStatus", "EPAS_sysStatus", 0),
+      ("EPAS_eacStatus", "EPAS_sysStatus", 1),
       ("EPAS_eacErrorCode", "EPAS_sysStatus", 0),
       ("DI_cruiseState", "DI_state", 0),
       ("DI_digitalSpeed", "DI_state", 0),
