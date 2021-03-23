@@ -40,8 +40,9 @@ class CarController():
       cruise_cancel = True
 
     if ((frame % 10) == 0 and cruise_cancel):
-      # Spam every possible counter value, otherwise it's not accepted
-      for counter in range(16):
+      # Spam every possible counter value, otherwise it might not be accepted
+      # Sending the counters in reverse is better for the RX checking logic in the ECU
+      for counter in range(15, -1, -1):
         can_sends.append(self.tesla_can.create_action_request(CS.msg_stw_actn_req, cruise_cancel, CANBUS.chassis, counter))
         can_sends.append(self.tesla_can.create_action_request(CS.msg_stw_actn_req, cruise_cancel, CANBUS.autopilot, counter))
 
