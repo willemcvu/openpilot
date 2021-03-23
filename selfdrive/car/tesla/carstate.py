@@ -121,7 +121,6 @@ class CarState(CarStateBase):
       ("BC_indicatorRStatus", "GTW_carState", 1),
       ("SDM_bcklDrivStatus", "SDM1", 0),
       ("driverBrakeStatus", "BrakeMessage", 0),
-      ("autopilotStatus", "AutopilotStatus", 0),
 
       # We copy this whole message when spamming cancel
       ("SpdCtrlLvr_Stat", "STW_ACTN_RQ", 0),
@@ -169,7 +168,6 @@ class CarState(CarStateBase):
       ("GTW_carState", 10),
       ("SDM1", 10),
       ("BrakeMessage", 50),
-      # ("AutopilotStatus", 2),
     ]
 
     return CANParser(DBC[CP.carFingerprint]['chassis'], signals, checks, CANBUS.chassis)
@@ -178,6 +176,7 @@ class CarState(CarStateBase):
   def get_cam_can_parser(CP):
     signals = [
       # sig_name, sig_address, default
+      ("autopilotStatus", "AutopilotStatus", 0),
     ]
     checks = [
       # sig_address, frequency
