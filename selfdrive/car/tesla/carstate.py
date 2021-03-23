@@ -180,5 +180,6 @@ class CarState(CarStateBase):
     ]
     checks = [
       # sig_address, frequency
+      ("AutopilotStatus", 2),
     ]
     return CANParser(DBC[CP.carFingerprint]['chassis'], signals, checks, CANBUS.autopilot)
