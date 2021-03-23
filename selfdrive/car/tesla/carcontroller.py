@@ -27,6 +27,11 @@ class CarController():
       max_angle_diff = interp(CS.out.vEgo, rate_limit.speed_points, rate_limit.max_angle_diff_points)
       apply_angle = clip(apply_angle, (self.last_angle - max_angle_diff), (self.last_angle + max_angle_diff))
 
+      # Janky user torque blending
+      if CS.hands_on_level >= 1:
+        req_angle_diff = apply_angle - CS.out.steeringAngleDeg
+        apply_angle = CS.out.steeringAngleDeg + clip(req_angle_diff * 0.2, -1, 1)
+
       # To not fault the EPS
       apply_angle = clip(apply_angle, (CS.out.steeringAngleDeg - 20), (CS.out.steeringAngleDeg + 20))
     else:
