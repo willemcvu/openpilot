@@ -46,7 +46,7 @@ class CarState(CarStateBase):
     ret.steerWarning = self.steer_warning in ["EAC_ERROR_MAX_SPEED", "EAC_ERROR_MIN_SPEED", "EAC_ERROR_TMP_FAULT", "EAC_INHIBITED", "SNA"]  # TODO: not sure if this list is complete
 
     # Cruise state
-    autopilot_status = self.can_define.dv["AutopilotStatus"]["autopilotStatus"].get(int(cp.vl["AutopilotStatus"]["autopilotStatus"]), None)
+    autopilot_status = self.can_define.dv["AutopilotStatus"]["autopilotStatus"].get(int(cp_cam.vl["AutopilotStatus"]["autopilotStatus"]), None)
     cruise_state = self.can_define.dv["DI_state"]["DI_cruiseState"].get(int(cp.vl["DI_state"]["DI_cruiseState"]), None)
     speed_units = self.can_define.dv["DI_state"]["DI_speedUnits"].get(int(cp.vl["DI_state"]["DI_speedUnits"]), None)
 
