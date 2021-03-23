@@ -21,11 +21,6 @@ class CarController():
     if lkas_enabled:
       apply_angle = actuators.steeringAngleDeg
 
-      # Janky user torque blending
-      if CS.hands_on_level >= 1:
-        req_angle_diff = apply_angle - CS.out.steeringAngleDeg
-        apply_angle = CS.out.steeringAngleDeg + clip(req_angle_diff * 0.2, -1, 1)
-
       # Angular rate limit based on speed
       steer_up = (self.last_angle * apply_angle > 0. and abs(apply_angle) > abs(self.last_angle))
       rate_limit = CarControllerParams.RATE_LIMIT_UP if steer_up else CarControllerParams.RATE_LIMIT_DOWN
