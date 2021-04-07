@@ -168,7 +168,7 @@ class LateralPlanner():
       self.LP.lll_prob *= self.lane_change_ll_prob
       self.LP.rll_prob *= self.lane_change_ll_prob
     if self.use_lanelines:
-      std_cost_mult = np.clip(abs(self.path_xyz[0,1]/self.path_xyz_stds[0,1]), 0.5, 5.0)
+      std_cost_mult = np.clip(2*abs(self.path_xyz[0,1]/self.path_xyz_stds[0,1]), 0.5, 5.0)**2
       d_path_xyz = self.LP.get_d_path(v_ego, self.t_idxs, self.path_xyz)
     else:
       std_cost_mult = 1.0
