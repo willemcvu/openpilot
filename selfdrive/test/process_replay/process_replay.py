@@ -416,11 +416,13 @@ def cpp_replay_process(cfg, lr):
 
   for msg in tqdm(pub_msgs, disable=CI):
     pm.send(msg.which(), msg.as_builder())
-    resp_sockets = sub_sockets if cfg.should_recv_callback is None else cfg.should_recv_callback(msg)
+    resp_sockets = cfg.pub_sub[msg.which()] if cfg.should_recv_callback is None else cfg.should_recv_callback(msg)
     for s in resp_sockets:
       response = messaging.recv_one(sockets[s])
       if response is not None:
         log_msgs.append(response)
+
+    time.sleep(0.1)  # TODO some kind of communication to continue to next
 
   managed_processes[cfg.proc_name].stop()
   return log_msgs
