@@ -422,7 +422,8 @@ def cpp_replay_process(cfg, lr):
       if response is not None:
         log_msgs.append(response)
 
-    time.sleep(0.1)  # TODO some kind of communication to continue to next
+    if not len(resp_sockets):
+      time.sleep(0.01)  # TODO some kind of communication to continue to next
 
   managed_processes[cfg.proc_name].stop()
   return log_msgs
